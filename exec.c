@@ -1,4 +1,21 @@
-#include "main.h"
+#include "shell.h"
+
+/**
+ * print_env - prints the current envirenment
+ *
+ * Return: void
+ */
+
+void print_env(void)
+{
+	char **env = environ;
+
+	while (*env)
+	{
+		printf("%s\n", *env);
+		env++;
+	}
+}
 
 /**
  * exec - executes a command
@@ -14,12 +31,14 @@ int exec(char **av)
 
 	cmd = argv[0];
 	if (strcmp(cmd, "pwd") == 0)
-	{
 		printf("%s\n", getcwd(working_dir, 1024));
-	}
 	else if (strcmp(cmd, "exit") == 0)
 	{
 		exit(0);
+	}
+	else if (strcmp(cmd, "env") == 0)
+	{
+		print_env();
 	}
 	else
 	{

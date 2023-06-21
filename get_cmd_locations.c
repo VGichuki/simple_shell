@@ -1,4 +1,4 @@
-#include "main.h"
+#include "shell.h"
 
 /**
  * location - returns full path of a command
