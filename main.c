@@ -1,4 +1,5 @@
 #include "shell.h"
+#define DELIM " \n\t\r"
 
 /**
  * tokenize - divides string into tokens
@@ -8,20 +9,28 @@
 
 char **tokenize(char *str)
 {
-	char *token, **args;
-	int i;
-	char delim = " \n\t\r";
+	char *token, **args /*str_cpy*/;
+	int i = 0;
 
 	args = malloc(sizeof(char *) * 1024);
 	if (!args)
+	{
+		free(args);
 		return (NULL);
-	token = strtok(str, delim);
+	}
+	/*str_cpy = strdup(str);
+	if (!str_cpy)
+	{
+		perror("Error");
+		return (NULL);
+	}*/
+	token = strtok(str, DELIM);
 	while (token)
 	{
 		args[i] = token;
 		if (!args[i])
 			return (NULL);
-		token = strtok(NULL, delim);
+		token = strtok(NULL, DELIM);
 		i++;
 	}
 	args[i] = NULL;
@@ -61,7 +70,7 @@ int main(int argc, char **argv)
 	while (1)
 	{
 		prompt();
-		status = getlie(&buf, &len, stdin);
+		status = getline(&buf, &len, stdin);
 		if (status == -1)
 		{
 			exit(1);
@@ -74,12 +83,12 @@ int main(int argc, char **argv)
 		}
 		exec(arg);
 
-		for (i = 0; arg[i] != NULL; i++)
+		/*for (i = 0; arg[i] != NULL; i++)
 		{
 			free(arg[i]);
-		}
+		}*/
 		free(arg);
-		free(buf);
+		/*free(buf);*/
 		buf = NULL;
 		len = 0;
 	}

@@ -1,4 +1,5 @@
 #include "shell.h"
+#define DELIM ":"
 
 /**
  * location - returns full path of a command
@@ -9,22 +10,22 @@
 
 char *location(const char *cmd)
 {
-	char *path, *token, *full_path;
-	char delim = ":";
+	char *path, *token, *full_path, *path_env;
 	int len;
 
-	path = getenv("PATH");
-	if (!path)
+	path_env = getenv("PATH");
+	if (!path_env)
 	{
 		return (NULL);
 	}
+	path = strdup(path_env);
 
-	token = strtok(path, delim);
+	token = strtok(path, DELIM);
 
 	while (token)
 	{
 		len = strlen(token) + strlen(cmd) + 2;
-		full_path = malloc(len);
+		full_path = malloc(sizeof(char) * len);
 		if (!full_path)
 		{
 			free(full_path);
@@ -34,7 +35,9 @@ char *location(const char *cmd)
 		if (access(full_path, F_OK) == 0)
 			return (full_path);
 		free(full_path);
-		token = strtok(NULL, delim);
+		token = strtok(NULL, DELIM);
 	}
+	perror("Error");
+	/*free(path);*/
 	return (NULL);
 }

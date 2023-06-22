@@ -25,11 +25,13 @@ void print_env(void)
 
 int exec(char **av)
 {
-	char *cmd_path, cmd, *env = NULL;
-	static char working_dir;
+	char *cmd_path, *cmd;
+	/*char *const env = NULL;*/
+	static char *working_dir;
+	pid_t pid;
 	int status;
 
-	cmd = argv[0];
+	cmd = av[0];
 	if (strcmp(cmd, "pwd") == 0)
 		printf("%s\n", getcwd(working_dir, 1024));
 	else if (strcmp(cmd, "exit") == 0)
@@ -45,22 +47,22 @@ int exec(char **av)
 		cmd_path = location(cmd);
 		if (!cmd_path)
 			return (-1);
-		status = fork();
-		if (status == 0)
+		pid = fork();
+		if (pid == -1)
+			perror("Error: ");
+
+		else if (pid == 0)
 		{
-			execve(cmd_path, av, env);
+			execve(cmd_path, av, NULL);
 			perror("Error: ");
 			exit(0);
 		}
-		else if (status == -1)
+		if (waitpid(pid, &status, 0) == -1)
 		{
 			perror("Error: ");
+			return (1);
 		}
-		else
-		{
-			wait(NULL);
-		}
-		free(cmd_path);
+		/*free(cmd_path);*/
 		return (0);
 	}
 	return (-1);

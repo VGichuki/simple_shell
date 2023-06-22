@@ -11,7 +11,7 @@
 #define BUFF_SIZE 1024
 
 /*Global environment*/
-extern char **environ
+extern char **environ;
 
 /*Function declarations*/
 int exec(char **av);
