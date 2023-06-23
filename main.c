@@ -1,6 +1,8 @@
 #include "shell.h"
 #define DELIM " \n\t\r"
 
+void free_tokens(char **args);
+
 /**
  * tokenize - divides string into tokens
  * @str: string to tokenize
@@ -15,26 +17,43 @@ char **tokenize(char *str)
 	args = malloc(sizeof(char *) * 1024);
 	if (!args)
 	{
-		free(args);
+		/*free(args)*/
 		return (NULL);
 	}
-	/*str_cpy = strdup(str);
-	if (!str_cpy)
-	{
-		perror("Error");
-		return (NULL);
-	}*/
 	token = strtok(str, DELIM);
 	while (token)
 	{
-		args[i] = token;
+		args[i] = strdup(token);
 		if (!args[i])
+		{
+			free_tokens(args);
 			return (NULL);
+		}
 		token = strtok(NULL, DELIM);
 		i++;
 	}
 	args[i] = NULL;
 	return (args);
+}
+
+/**
+ * free_tokens - frees the array of tokens
+ * @args: array to be freed
+ * Return: void
+ */
+
+void free_tokens(char **args)
+{
+	int i;
+
+	if (args)
+	{
+		for (i = 0; args[i] != NULL; i++)
+		{
+			free(args[i]);
+		}
+		free(args);
+	}
 }
 
 
@@ -73,27 +92,22 @@ int main(int argc, char **argv)
 		status = getline(&buf, &len, stdin);
 		if (status == -1)
 		{
+			free(buf);
 			exit(1);
 		}
 		arg = tokenize(buf);
 		if (arg == NULL)
 		{
-			free(buf);
 			continue;
 		}
 		exec(arg);
 
-		/*for (i = 0; arg[i] != NULL; i++)
-		{
-			free(arg[i]);
-		}*/
-		free(arg);
-		/*free(buf);*/
+		free_tokens(arg);
+		free(buf);
 		buf = NULL;
 		len = 0;
 	}
 	return (0);
 	argc++;
 	argv[i] = "j";
-
 }

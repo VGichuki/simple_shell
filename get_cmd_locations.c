@@ -28,16 +28,18 @@ char *location(const char *cmd)
 		full_path = malloc(sizeof(char) * len);
 		if (!full_path)
 		{
-			free(full_path);
+			free(path);
 			return (NULL);
 		}
 		sprintf(full_path, "%s/%s", token, cmd);
 		if (access(full_path, F_OK) == 0)
+		{
+			free(path);
 			return (full_path);
+		}
 		free(full_path);
 		token = strtok(NULL, DELIM);
 	}
-	perror("Error");
-	/*free(path);*/
+	free(path);
 	return (NULL);
 }
