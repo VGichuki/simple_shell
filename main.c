@@ -93,7 +93,7 @@ int main(int argc, char **argv)
 		if (status == -1)
 		{
 			free(buf);
-			exit(1);
+			exit(0);
 		}
 		arg = tokenize(buf);
 		if (arg == NULL)
@@ -107,6 +107,7 @@ int main(int argc, char **argv)
 		buf = NULL;
 		len = 0;
 	}
+	free_tokens(arg);
 	return (0);
 	argc++;
 	argv[i] = "j";
