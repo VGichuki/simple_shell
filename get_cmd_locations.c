@@ -13,6 +13,15 @@ char *location(const char *cmd)
 	char *path, *token, *full_path, *path_env;
 	int len;
 
+	if (strchr(cmd, '/') != NULL)
+	{
+		if (access(cmd, X_OK) == 0)
+			return(strdup(cmd));
+		else
+		{
+			return(NULL);
+		}
+	}
 	path_env = getenv("PATH");
 	if (!path_env)
 	{

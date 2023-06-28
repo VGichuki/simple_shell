@@ -23,34 +23,28 @@ void print_env(void)
  * Return: 0 on success
  */
 
-int exec(char **av)
+int exec(char *argv, char **av)
 {
 	char *cmd_path, *cmd;
-	static char *working_dir;
 	pid_t pid;
 	int status;
 
 	cmd = av[0];
-	if (strcmp(cmd, "pwd") == 0)
-	{
-		printf("%s\n", getcwd(working_dir, 1024));
-		free(working_dir);
-	}
-	else if (strcmp(cmd, "exit") == 0)
-	{
+	if (strcmp(cmd, "exit") == 0)
 		exit(0);
-	}
 	else if (strcmp(cmd, "env") == 0)
 		print_env();
 	else
 	{
 		cmd_path = location(cmd);
 		if (!cmd_path)
+		{
+			fprintf(stderr, "%s: 1: %s: not found\n", argv, cmd);
 			return (-1);
+		}
 		pid = fork();
 		if (pid == -1)
 			perror("Error");
-
 		else if (pid == 0)
 		{
 			execve(cmd_path, av, NULL);

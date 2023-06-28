@@ -100,7 +100,7 @@ int main(int argc, char **argv)
 		{
 			continue;
 		}
-		exec(arg);
+		exec(argv[0], arg);
 
 		free_tokens(arg);
 		free(buf);
