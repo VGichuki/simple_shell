@@ -19,6 +19,7 @@ void print_env(void)
 
 /**
  * exec - executes a command
+ * @argv: name of the program
  * @av: the commands
  * Return: 0 on success
  */

@@ -16,11 +16,8 @@ char *location(const char *cmd)
 	if (strchr(cmd, '/') != NULL)
 	{
 		if (access(cmd, X_OK) == 0)
-			return(strdup(cmd));
-		else
-		{
-			return(NULL);
-		}
+			return (strdup(cmd));
+		return (NULL);
 	}
 	path_env = getenv("PATH");
 	if (!path_env)
